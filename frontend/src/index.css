@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+img {
+  width: 100%;
+  max-width: 200px;
+}
