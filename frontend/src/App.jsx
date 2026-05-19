@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   BrowserRouter,
   Routes,
@@ -12,6 +14,7 @@ import Register from "./pages/Register";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
+import ProductDetail from "./pages/ProductDetail";
 
 export default function App() {
   return (
@@ -24,6 +27,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
