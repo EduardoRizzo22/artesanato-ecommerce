@@ -8,8 +8,3 @@ exports.createOrder = async (req, res) => {
 
   res.json(order);
 };
-
-exports.getOrders = async (req, res) => {
-  const orders = await Order.find();
-  res.json(orders);
-};
