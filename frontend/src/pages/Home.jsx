@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState, useContext } from "react";
 import api from "../api/api";
 import ProductCard from "../components/ProductCard";
@@ -21,15 +22,16 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Produtos</h1>
+      <div className="hero-section">
+        <h1>Artesanato & Cia</h1>
+        <p>Produtos feitos com muito carinho para você.</p>
+      </div>
 
-      {products.map((p) => (
-        <ProductCard
-          key={p._id}
-          product={p}
-          add={add}
-        />
-      ))}
+      <div className="produtos-grid">
+        {products.map((p) => (
+          <ProductCard key={p._id} product={p} add={add} />
+        ))}
+      </div>
     </div>
   );
 }
