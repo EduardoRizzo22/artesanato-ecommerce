@@ -14,14 +14,39 @@ export default function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  // Redireciona o usuário para a página inicial se o carrinho estiver vazio e a compra não foi concluída
   useEffect(() => {
     if (cart.length === 0 && !success) {
       navigate("/");
     }
   }, [cart, navigate, success]);
 
+  // Calcula o valor total do carrinho
   const total = cart.reduce((acc, item) => acc + item.price, 0);
 
+  // Integração com a API do ViaCEP para buscar endereço automaticamente
+  const handleZipcodeBlur = async (e) => {
+    const cep = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    if (cep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        if (!data.erro) {
+          setAddress(prev => ({
+            ...prev,
+            street: data.logradouro || "",
+            neighborhood: data.bairro || "",
+            city: data.localidade || "",
+            state: data.uf || ""
+          }));
+        }
+      } catch (err) {
+        console.error("Erro ao buscar CEP", err);
+      }
+    }
+  };
+
+  // Função disparada ao enviar o formulário de pagamento
   const finish = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -72,11 +97,12 @@ export default function Checkout() {
           <form onSubmit={finish}>
             <h2 style={{ marginBottom: "1rem", fontSize: "1.5rem" }}>1. Endereço de Entrega</h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-              <input style={{ gridColumn: "1 / -1", padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Endereço completo (Rua, Número)" value={address.street} onChange={e => setAddress({...address, street: e.target.value})} required />
+              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="CEP (Digite para buscar)" value={address.zipcode} onChange={e => setAddress({...address, zipcode: e.target.value})} onBlur={handleZipcodeBlur} required maxLength={9} />
+              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Endereço (Rua, Av)" value={address.street} onChange={e => setAddress({...address, street: e.target.value})} required />
+              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Número / Complemento" required />
               <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Bairro" value={address.neighborhood} onChange={e => setAddress({...address, neighborhood: e.target.value})} required />
-              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="CEP" value={address.zipcode} onChange={e => setAddress({...address, zipcode: e.target.value})} required />
               <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Cidade" value={address.city} onChange={e => setAddress({...address, city: e.target.value})} required />
-              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Estado (UF)" value={address.state} onChange={e => setAddress({...address, state: e.target.value})} required />
+              <input style={{ padding: "0.8rem", borderRadius: "8px", border: "1px solid #e5e7eb" }} placeholder="Estado (UF)" value={address.state} onChange={e => setAddress({...address, state: e.target.value})} required maxLength={2} />
             </div>
 
             <h2 style={{ marginTop: "2rem", marginBottom: "1rem", fontSize: "1.5rem" }}>2. Forma de Pagamento</h2>

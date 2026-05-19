@@ -2,7 +2,7 @@
 
 Um sistema completo de E-commerce construído para venda de produtos artesanais. O projeto conta com um portal público para os clientes visualizarem produtos, adicionarem ao carrinho e realizarem o checkout, além de um painel administrativo seguro para a gestão de catálogo e acompanhamento de vendas.
 
-## 🛠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Frontend:** React.js (com Vite), React Router DOM.
 - **Backend:** Node.js, Express.js.
