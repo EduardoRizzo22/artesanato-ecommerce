@@ -16,10 +16,18 @@ export default function Home() {
 
   // Busca inicial dos produtos quando a tela carrega
   useEffect(() => {
-    api.get("/products").then((res) => {
-      setProducts(res.data);
-    });
-  }, []);
+  async function load() {
+    try {
+      const res = await api.get("/products");
+      setProducts(res.data || []);
+    } catch (err) {
+      console.log(err);
+      setProducts([]);
+    }
+  }
+
+  load();
+}, []);
 
   // Função para adicionar item ao carrinho
   const add = (product) => {
@@ -28,10 +36,15 @@ export default function Home() {
   };
 
   // Filtra os produtos com base no termo de busca (ignorando maiúsculas/minúsculas)
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(search.toLowerCase()) || 
-    p.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) =>
+  (p?.name || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
+
+  (p?.category || "")
+    .toLowerCase()
+    .includes(search.toLowerCase())
+);
 
   return (
     <div>
